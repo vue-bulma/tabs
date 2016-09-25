@@ -2,15 +2,15 @@
   <div :class="{ tabs: true, [`is-${size}`]: size, [`is-${alignment}`]: alignment, [`is-${type}`]: type, 'is-fullwidth': isFullwidth, [`is-layout-${layout}`]: true }">
     <slot name="left-tab-list"></slot>
     <tab-list>
-      <li v-for="tab in $tabPanes"
+      <li v-for="(tab, index) in tabPanes"
         role="tab"
-        :class="{ 'is-active': isActived($index), 'is-disabled': tab.disabled, 'is-flex': true }"
-        :aria-selected="isActived($index) ? 'true' : 'false'"
-        :aria-expanded="isActived($index) ? 'true' : 'false'"
+        :class="{ 'is-active': isActived(index), 'is-disabled': tab.disabled, 'is-flex': true }"
+        :aria-selected="isActived(index) ? 'true' : 'false'"
+        :aria-expanded="isActived(index) ? 'true' : 'false'"
         :aria-disabled="tab.disabled ? 'true' : 'false'"
-        :selected="isActived($index)"
+        :selected="isActived(index)"
         :disabled="tab.disabled"
-        @click.prevent="select($index)">
+        @click="select(index)">
         <a class="is-unselectable">
           <span :class="['icon', { 'is-small': size !== 'large' }]" v-if="tab.icon"><i :class="tab.icon"></i></span>
           <span>{{ tab.label }}</span>
@@ -67,34 +67,35 @@ export default {
     }
   },
 
-  computed: {
-    $tabPanes () {
-      return this.$children.filter(child => child._isTabPane)
+  data () {
+    return {
+      realSelectedIndex: this.selectedIndex,
+      tabPanes: []
     }
   },
 
-  ready () {
-    for (let i = 0, l = this.$tabPanes.length; i < l; ++i) {
-      let tabPane = this.$tabPanes[i]
+  mounted () {
+    this.tabPanes = this.$children.filter(child => child._isTabPane)
+    for (const tabPane of this.tabPanes) {
       if (!tabPane.disabled && tabPane.selected) {
-        this.select(i)
+        this.select(tabPane.index)
         break
       }
     }
-    if (this.selectedIndex === -1) {
+    if (this.realSelectedIndex === -1) {
       this.select(0)
     }
   },
 
   methods: {
     isActived (index) {
-      return index === this.selectedIndex
+      return index === this.realSelectedIndex
     },
 
     select (index) {
-      let prevSelectedIndex = this.selectedIndex
-      this.selectedIndex = index
-      this.$broadcast('on-tab-click', this.selectedIndex, prevSelectedIndex)
+      let prevSelectedIndex = this.realSelectedIndex
+      this.realSelectedIndex = index
+      this.$emit('select', index, prevSelectedIndex)
     }
   }
 }

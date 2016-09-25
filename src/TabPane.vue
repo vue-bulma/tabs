@@ -1,18 +1,64 @@
 <template>
-  <div
-    role="tabpanel"
-    v-if="selected"
-    :class="{ 'tab-pane': true, 'animated': true, 'is-active': selected, 'is-deactive': !selected }"
-    :aria-labelledby="label"
-    :aria-hidden="hidden"
-    :transition="transition"
-    :transition-mode="transitionMode"
+  <transition
+    :name="animation"
+    appear
+    :appear-active-class="enterActiveClass"
+    :enter-active-class="enterActiveClass"
+    :leave-active-class="leaveActiveClass"
+  >
+    <div
+      role="tabpanel"
+      v-if="realSelected"
+      :class="classObject"
+      :aria-labelledby="label"
+      :aria-hidden="hidden"
     >
-    <slot></slot>
-  </div>
+      <slot></slot>
+    </div>
+  </transition>
 </template>
 
 <script>
+
+const transitions = {
+  fade: {
+    enterClass: 'fadeIn',
+    leaveClass: 'fadeOut'
+  },
+  'fade-horizontal-rtl': {
+    enterClass: 'fadeInRight',
+    leaveClass: 'fadeOutLeft'
+  },
+  'fade-horizontal-ltr': {
+    enterClass: 'fadeInLeft',
+    leaveClass: 'fadeOutRight'
+  },
+  'slide-horizontal-rtl': {
+    enterClass: 'slideInRight',
+    leaveClass: 'slideOutLeft'
+  },
+  'slide-horizontal-ltr': {
+    enterClass: 'slideInLeft',
+    leaveClass: 'slideOutRight'
+  },
+  'fade-vertical-dtu': {
+    enterClass: 'fadeInUp',
+    leaveClass: 'fadeOutUp'
+  },
+  'fade-vertical-utd': {
+    enterClass: 'fadeInDown',
+    leaveClass: 'fadeOutDown'
+  },
+  'slide-vertical-dtu': {
+    enterClass: 'slideInUp',
+    leaveClass: 'slideOutUp'
+  },
+  'slide-vertical-utd': {
+    enterClass: 'slideInDown',
+    leaveClass: 'slideOutDown'
+  }
+}
+
 export default {
 
   props: {
@@ -23,34 +69,50 @@ export default {
       type: String,
       required: true
     },
-    transition: {
-      type: String,
-      default: 'fade'
-    },
-    transitionMode: {
+    mode: {
       type: String,
       default: 'out-in'
     }
   },
 
-  created () {
+  data () {
+    return {
+      realSelected: this.selected,
+      enterActiveClass: 'fadeIn',
+      leaveActiveClass: 'fadeOut'
+    }
+  },
+
+  beforeCreate () {
     this._isTabPane = true
   },
 
-  events: {
-    ['on' + '-tab-click'] (index, prevIndex) {
-      if (!this.onlyFade) {
-        if (prevIndex === -1 || prevIndex >= index) {
-          this.transition = `${this.animation}${this.layout ? `-${this.direction}` : ''}${this.gte ? `-${this.gte}` : ''}`
-        } else {
-          this.transition = `${this.animation}${this.layout ? `-${this.direction}` : ''}${this.lt ? `-${this.lt}` : ''}`
-        }
-      }
-      this.selected = this.index === index
+  mounted () {
+    this.$parent.$on('select', this.select)
+  },
+
+  destroyed () {
+    this.$parent.$off('select', this.select)
+  },
+
+  methods: {
+    select (index, prevIndex) {
+      const isCurr = this.index === index
+      this.realSelected = isCurr
     }
   },
 
   computed: {
+    classObject () {
+      const { realSelected } = this
+      return {
+        'tab-pane': true,
+        'animated': true,
+        'is-active': realSelected,
+        'is-deactive': !realSelected
+      }
+    },
+
     layout () {
       return this.$parent.layout
     },
@@ -91,12 +153,12 @@ export default {
     },
 
     index () {
-      return this.$parent.$tabPanes.indexOf(this)
+      return this.$parent.tabPanes.indexOf(this)
     },
 
     hidden () {
-      return this.selected ? 'false' : 'true'
+      return this.realSelected ? 'false' : 'true'
     }
   }
 }
-</script>
+  </script>

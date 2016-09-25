@@ -1,5 +1,5 @@
 <template>
-  <ul :class="{ 'tab-list': true, 'is-flex': true, [`is-${alignment}`]: alignment }" role="tablist">
+  <ul :class="classObject" role="tablist">
     <slot></slot>
   </ul>
 </template>
@@ -10,6 +10,17 @@ export default {
     alignment: {
       type: String,
       default: ''
+    }
+  },
+
+  computed: {
+    classObject () {
+      const { alignment } = this
+      return {
+        'tab-list': true,
+        'is-flex': true,
+        [`is-${alignment}`]: alignment 
+      }
     }
   }
 }
