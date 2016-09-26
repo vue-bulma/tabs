@@ -75,27 +75,28 @@ export default {
   },
 
   mounted () {
-    this.tabPanes = this.$children.filter(child => child._isTabPane)
-    for (const tabPane of this.tabPanes) {
-      if (!tabPane.disabled && tabPane.selected) {
-        this.select(tabPane.index)
-        break
-      }
-    }
+    this.update()
     if (this.realSelectedIndex === -1) {
       this.select(0)
     }
   },
 
   methods: {
+    update () {
+      for (const tabPane of this.tabPanes) {
+        if (!tabPane.disabled && tabPane.realSelected) {
+          this.select(tabPane.index)
+          break
+        }
+      }
+    },
+
     isActived (index) {
       return index === this.realSelectedIndex
     },
 
     select (index) {
-      let prevSelectedIndex = this.realSelectedIndex
       this.realSelectedIndex = index
-      this.$emit('select', index, prevSelectedIndex)
     }
   }
 }

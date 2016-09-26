@@ -1,14 +1,15 @@
 <template>
   <transition
     :name="animation"
+    mode="out-in"
     appear
-    :appear-active-class="enterActiveClass"
-    :enter-active-class="enterActiveClass"
-    :leave-active-class="leaveActiveClass"
+    :appear-active-class="transition.enterClass"
+    :enter-active-class="transition.enterClass"
+    :leave-active-class="transition.leaveClass"
   >
     <div
       role="tabpanel"
-      v-if="realSelected"
+      v-show="realSelected"
       :class="classObject"
       :aria-labelledby="label"
       :aria-hidden="hidden"
@@ -19,9 +20,8 @@
 </template>
 
 <script>
-
-const transitions = {
-  fade: {
+const TS = {
+  'fade': {
     enterClass: 'fadeIn',
     leaveClass: 'fadeOut'
   },
@@ -60,7 +60,6 @@ const transitions = {
 }
 
 export default {
-
   props: {
     icon: String,
     selected: Boolean,
@@ -78,28 +77,16 @@ export default {
   data () {
     return {
       realSelected: this.selected,
-      enterActiveClass: 'fadeIn',
-      leaveActiveClass: 'fadeOut'
+      transition: TS['fade']
     }
   },
 
-  beforeCreate () {
-    this._isTabPane = true
+  created () {
+    this.$parent.tabPanes.push(this)
   },
 
-  mounted () {
-    this.$parent.$on('select', this.select)
-  },
-
-  destroyed () {
-    this.$parent.$off('select', this.select)
-  },
-
-  methods: {
-    select (index, prevIndex) {
-      const isCurr = this.index === index
-      this.realSelected = isCurr
-    }
+  beforeDestroy () {
+    this.$parent.tabPanes.splice(this.index, 1)
   },
 
   computed: {
@@ -112,11 +99,9 @@ export default {
         'is-deactive': !realSelected
       }
     },
-
     layout () {
       return this.$parent.layout
     },
-
     direction () {
       if (this.layout === 'top' || this.layout === 'bottom') {
         return 'horizontal'
@@ -125,15 +110,12 @@ export default {
       }
       return ''
     },
-
     animation () {
       return this.$parent.animation
     },
-
     onlyFade () {
       return this.$parent.onlyFade
     },
-
     gte () {
       if (this.direction === 'vertical') {
         return 'utd'
@@ -142,7 +124,6 @@ export default {
       }
       return ''
     },
-
     lt () {
       if (this.direction === 'vertical') {
         return 'dtu'
@@ -151,14 +132,27 @@ export default {
       }
       return ''
     },
-
-    index () {
-      return this.$parent.tabPanes.indexOf(this)
-    },
-
     hidden () {
       return this.realSelected ? 'false' : 'true'
+    },
+    index () {
+      return this.$parent.tabPanes.indexOf(this)
+    }
+  },
+
+  watch: {
+    '$parent.realSelectedIndex' (index, prevIndex) {
+      if (!this.onlyFade) {
+        let transition
+        if (prevIndex === -1 || prevIndex > index) {
+          transition = `${this.animation}${this.layout ? `-${this.direction}` : ''}${this.gte ? `-${this.gte}` : ''}`
+        } else {
+          transition = `${this.animation}${this.layout ? `-${this.direction}` : ''}${this.lt ? `-${this.lt}` : ''}`
+        }
+        this.transition = TS[transition] || TS['fade']
+      }
+      this.realSelected = this.index === index
     }
   }
 }
-  </script>
+</script>
