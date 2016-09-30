@@ -19,7 +19,7 @@ export default {
       return {
         'tab-list': true,
         'is-flex': true,
-        [`is-${alignment}`]: alignment 
+        [`is-${alignment}`]: alignment
       }
     }
   }
