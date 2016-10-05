@@ -1,6 +1,6 @@
 # Tabs
 
-Tabs component for Vue Bulma.
+[Tabs](http://bulma.io/documentation/components/tabs) component for Vue Bulma.
 
 
 ## Installation
