@@ -152,6 +152,10 @@ export default {
         }
       }
     }
+
+    .tab-content {
+      margin: 30px 10px;
+    }
   }
   &.is-layout-right {
     flex-direction: row-reverse;
@@ -187,6 +191,10 @@ export default {
           }
         }
       }
+    }
+
+    .tab-content {
+      margin: 30px 10px;
     }
   }
 
