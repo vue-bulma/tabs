@@ -1,23 +1,25 @@
 <template>
-  <div :class="{ tabs: true, [`is-${size}`]: size, [`is-${alignment}`]: alignment, [`is-${type}`]: type, 'is-fullwidth': isFullwidth, [`is-layout-${layout}`]: true }">
-    <slot name="left-tab-list"></slot>
-    <tab-list>
-      <li v-for="(tab, index) in tabPanes"
-        role="tab"
-        :class="{ 'is-active': isActived(index), 'is-disabled': tab.disabled, 'is-flex': true }"
-        :aria-selected="isActived(index) ? 'true' : 'false'"
-        :aria-expanded="isActived(index) ? 'true' : 'false'"
-        :aria-disabled="tab.disabled ? 'true' : 'false'"
-        :selected="isActived(index)"
-        :disabled="tab.disabled"
-        @click="select(index)">
-        <a class="is-unselectable">
-          <span :class="['icon', { 'is-small': size !== 'large' }]" v-if="tab.icon"><i :class="tab.icon"></i></span>
-          <span>{{ tab.label }}</span>
-        </a>
-      </li>
-    </tab-list>
-    <slot name="right-tab-list"></slot>
+  <div :class="{ 'vue-bulma-tabs': true, [`is-layout-${layout}`]: true }">
+    <div  :class="{ tabs: true, [`is-${size}`]: size, [`is-${alignment}`]: alignment, [`is-${type}`]: type, 'is-fullwidth': isFullwidth }">
+      <slot name="left-tab-list"></slot>
+      <tab-list>
+        <li v-for="(tab, index) in tabPanes"
+          role="tab"
+          :class="{ 'is-active': isActived(index), 'is-disabled': tab.disabled, 'is-flex': true }"
+          :aria-selected="isActived(index) ? 'true' : 'false'"
+          :aria-expanded="isActived(index) ? 'true' : 'false'"
+          :aria-disabled="tab.disabled ? 'true' : 'false'"
+          :selected="isActived(index)"
+          :disabled="tab.disabled"
+          @click="select(index)">
+          <a class="is-unselectable">
+            <span :class="['icon', { 'is-small': size !== 'large' }]" v-if="tab.icon"><i :class="tab.icon"></i></span>
+            <span>{{ tab.label }}</span>
+          </a>
+        </li>
+      </tab-list>
+      <slot name="right-tab-list"></slot>
+    </div>
     <div class="tab-content is-flex">
       <slot></slot>
     </div>
@@ -105,41 +107,10 @@ export default {
 <style lang="scss">
 @import '~bulma/sass/utilities/variables';
 
-.tabs {
+.vue-bulma-tabs {
   position: relative;
+  display: flex;
   flex: 1;
-
-  .tab-list {
-    flex: 0 1 auto;
-  }
-
-  .tab-content {
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-    margin: 10px;
-    flex: 1 1;
-  }
-
-  .tab-pane {
-    width: 100%;
-    flex: 1 1;
-
-    &.is-active {
-      transform: translateZ(0);
-    }
-
-    &[class*="Out"] {
-      overflow: hidden;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      transform: translateX(0);
-      transform: translateY(0);
-    }
-  }
 
   &.is-layout-top {
     flex-direction: column;
@@ -155,7 +126,7 @@ export default {
     .tab-list {
       flex-direction: column;
       align-items: flex-start;
-      max-width: calc(100% / 6);
+      // max-width: calc(100% / 6);
       border-bottom: none;
       border-right: 1px solid $grey-light;
     }
@@ -191,7 +162,7 @@ export default {
       flex-direction: column;
       align-items: flex-end;
       justify-content: flex-start;
-      max-width: calc(100% / 6);
+      // max-width: calc(100% / 6);
       border-bottom: none;
       border-left: 1px solid $grey-light;
 
@@ -216,6 +187,34 @@ export default {
           }
         }
       }
+    }
+  }
+
+  .tab-content {
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    margin: 10px 30px;
+    flex: 1 1;
+  }
+
+  .tab-pane {
+    width: 100%;
+    flex: 1 1;
+
+    &.is-active {
+      transform: translateZ(0);
+    }
+
+    &[class*="Out"] {
+      overflow: hidden;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transform: translateX(0);
+      transform: translateY(0);
     }
   }
 }
