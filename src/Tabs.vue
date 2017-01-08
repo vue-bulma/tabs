@@ -98,6 +98,7 @@ export default {
     },
 
     select (index) {
+      this.$emit('tab-selected', index)
       this.realSelectedIndex = index
     }
   },
