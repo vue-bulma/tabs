@@ -98,6 +98,7 @@ export default {
     },
 
     select (index) {
+      this.$emit('clicked', index)
       this.realSelectedIndex = index
     }
   }
