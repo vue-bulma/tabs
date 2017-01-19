@@ -102,8 +102,8 @@ export default {
     }
   },
   watch: {
-    selectedIndex(newIndex) {
-      this.select(newIndex);
+    selectedIndex (newIndex) {
+      this.select(newIndex)
     }
   }
 }
