@@ -100,6 +100,11 @@ export default {
     select (index) {
       this.realSelectedIndex = index
     }
+  },
+  watch: {
+    selectedIndex(newIndex) {
+      this.select(newIndex);
+    }
   }
 }
 </script>
