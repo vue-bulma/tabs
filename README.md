@@ -33,7 +33,30 @@ export default {
 }
 </script>
 ```
+### Adding is-boxed or is-toggled
+To add the classes `is-boxed` or `is-toggled`, add the `boxed`
+or `toggled` property to the tabs element.
+```vue
+<template>
+  <tabs animation="slide" boxed toggled>
+    <tab-pane label="Pictures">Pictures Tab</tab-pane>
+    <tab-pane label="Music">Music Tab</tab-pane>
+    <tab-pane label="Videos" selected>Video Tab</tab-pane>
+    <tab-pane label="Documents" disabled>Document Tab</tab-pane>
+  </tabs>
+</template>
 
+<script>
+import { Tabs, TabPane } from 'vue-bulma-tabs'
+
+export default {
+  components: {
+    Tabs,
+    TabPane
+  }
+}
+</script>
+```
 
 ## Badges
 

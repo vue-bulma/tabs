@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'vue-bulma-tabs': true, [`is-layout-${layout}`]: true }">
-    <div  :class="{ tabs: true, [`is-${size}`]: size, [`is-${alignment}`]: alignment, [`is-${type}`]: type, 'is-fullwidth': isFullwidth }">
+    <div  :class="{ tabs: true, [`is-${size}`]: boxed, [`is-${size}`]: size, [`is-${alignment}`]: alignment, [`is-${type}`]: type, 'is-fullwidth': isFullwidth }">
       <slot name="left-tab-list"></slot>
       <tab-list>
         <li v-for="(tab, index) in tabPanes"
@@ -46,6 +46,10 @@ export default {
     type: {
       type: String,
       default: ''
+    },
+    boxed: {
+      type: Boolean,
+      default: false
     },
     size: {
       type: String,
