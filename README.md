@@ -33,7 +33,7 @@ export default {
 }
 </script>
 ```
-### Adding is-boxed or is-toggled
+#### Adding is-boxed or is-toggled
 To add the classes `is-boxed` or `is-toggled`, add the `boxed`
 or `toggled` property to the tabs element.
 ```vue
@@ -43,6 +43,37 @@ or `toggled` property to the tabs element.
     <tab-pane label="Music">Music Tab</tab-pane>
     <tab-pane label="Videos" selected>Video Tab</tab-pane>
     <tab-pane label="Documents" disabled>Document Tab</tab-pane>
+  </tabs>
+</template>
+
+<script>
+import { Tabs, TabPane } from 'vue-bulma-tabs'
+
+export default {
+  components: {
+    Tabs,
+    TabPane
+  }
+}
+</script>
+```
+
+#### Centered toggle with icons
+
+Using the `is-center` class with `is-toggled` and `is-fullwidth`
+
+```vue
+<template>
+  <tabs alignment="center" toggle size="large" isFullwidth>
+    <tab-pane icon="fa fa-image" label="Pictures">
+      Picture Content
+    </tab-pane>
+    <tab-pane icon="fa fa-music" label="Music">
+      Music Content
+    </tab-pane>
+    <tab-pane icon="fa fa-film" label="Film">
+      Film Content
+    </tab-pane>
   </tabs>
 </template>
 
